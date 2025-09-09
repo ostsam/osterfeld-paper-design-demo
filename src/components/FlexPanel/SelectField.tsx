@@ -32,6 +32,7 @@ export function SelectField({
 	});
 	const selectRef = useRef<HTMLDivElement>(null);
 	const buttonRef = useRef<HTMLButtonElement>(null);
+	const dropdownRef = useRef<HTMLDivElement>(null);
 	const currentOption = options.find((opt) => opt.value === value);
 
 	useEffect(() => {
@@ -47,7 +48,13 @@ export function SelectField({
 
 	useEffect(() => {
 		const handleClickOutside = (e: MouseEvent) => {
-			if (selectRef.current && !selectRef.current.contains(e.target as Node)) {
+			const target = e.target as Node;
+			const clickedInSelect =
+				selectRef.current && selectRef.current.contains(target);
+			const clickedInDropdown =
+				dropdownRef.current && dropdownRef.current.contains(target);
+
+			if (!clickedInSelect && !clickedInDropdown) {
 				setIsOpen(false);
 			}
 		};
@@ -116,6 +123,7 @@ export function SelectField({
 			{isOpen && (
 				<DropdownPortal>
 					<div
+						ref={dropdownRef}
 						className={`${styles.dropdown} ${styles[theme]}`}
 						style={{
 							top: `${dropdownPosition.top}px`,
