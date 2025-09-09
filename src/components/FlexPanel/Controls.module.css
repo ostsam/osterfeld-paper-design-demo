@@ -130,50 +130,39 @@
 	grid-template-columns: 1fr 1fr;
 	gap: 8px;
 	margin-bottom: 8px;
-	animation: slideIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both;
-}
-
-.row:nth-child(1) {
-	animation-delay: 0ms;
-}
-
-.row:nth-child(2) {
-	animation-delay: 40ms;
-}
-
-.row:nth-child(3) {
-	animation-delay: 80ms;
 }
 
 .row:last-child {
 	margin-bottom: 0;
 }
 
-/* For select fields that aren't in rows */
-.controls > div:not(.row) {
-	animation: fadeIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both;
-}
-
-.controls > div:not(.row):nth-child(1) {
+/* Staggered animations for all direct children of controls */
+.controls > *:nth-child(1) {
+	animation: slideIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 	animation-delay: 0ms;
 }
 
-.controls > div:not(.row):nth-child(2) {
-	animation-delay: 30ms;
+.controls > *:nth-child(2) {
+	animation: slideIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+	animation-delay: 40ms;
 }
 
-.controls > div:not(.row):nth-child(3) {
-	animation-delay: 60ms;
+.controls > *:nth-child(3) {
+	animation: slideIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+	animation-delay: 80ms;
 }
 
-.controls > div:not(.row):nth-child(4) {
-	animation-delay: 90ms;
-}
-
-.controls > div:not(.row):nth-child(5) {
+.controls > *:nth-child(4) {
+	animation: slideIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 	animation-delay: 120ms;
 }
 
-.controls > div:not(.row):nth-child(6) {
-	animation-delay: 150ms;
+.controls > *:nth-child(5) {
+	animation: slideIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+	animation-delay: 160ms;
+}
+
+.controls > *:nth-child(6) {
+	animation: slideIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+	animation-delay: 200ms;
 }
