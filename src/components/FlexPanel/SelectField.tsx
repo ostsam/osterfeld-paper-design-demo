@@ -1,0 +1,102 @@
+"use client";
+
+import { useState, useRef, useEffect } from "react";
+import styles from "./SelectField.module.css";
+
+interface Option {
+	value: string;
+	label: string;
+}
+
+interface SelectFieldProps {
+	theme: 'dark' | 'light';
+	label: string;
+	value: string;
+	onChange: (value: string) => void;
+	options: Option[];
+}
+
+export function SelectField({
+	theme,
+	label,
+	value,
+	onChange,
+	options,
+}: SelectFieldProps) {
+	const [isOpen, setIsOpen] = useState(false);
+	const selectRef = useRef<HTMLDivElement>(null);
+	const currentOption = options.find((opt) => opt.value === value);
+
+	useEffect(() => {
+		const handleClickOutside = (e: MouseEvent) => {
+			if (selectRef.current && !selectRef.current.contains(e.target as Node)) {
+				setIsOpen(false);
+			}
+		};
+
+		if (isOpen) {
+			document.addEventListener("mousedown", handleClickOutside);
+			return () =>
+				document.removeEventListener("mousedown", handleClickOutside);
+		}
+	}, [isOpen]);
+
+	const handleKeyDown = (e: React.KeyboardEvent) => {
+		if (e.key === "Enter" || e.key === " ") {
+			e.preventDefault();
+			setIsOpen(!isOpen);
+		} else if (e.key === "Escape") {
+			setIsOpen(false);
+		} else if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+			e.preventDefault();
+			const currentIndex = options.findIndex((opt) => opt.value === value);
+			const direction = e.key === "ArrowDown" ? 1 : -1;
+			const newIndex =
+				(currentIndex + direction + options.length) % options.length;
+			onChange(options[newIndex].value);
+		}
+	};
+
+	return (
+		<div className={`${styles.field} ${styles[theme]}`} ref={selectRef}>
+			<label className={styles.label}>{label}</label>
+			<button
+				className={`${styles.select} ${isOpen ? styles.open : ""}`}
+				onClick={() => setIsOpen(!isOpen)}
+				onKeyDown={handleKeyDown}
+				type="button"
+			>
+				<span className={styles.value}>{currentOption?.label}</span>
+				<svg className={styles.arrow} width="8" height="8" viewBox="0 0 8 8">
+					<path
+						d="M1 3L4 6L7 3"
+						stroke="currentColor"
+						fill="none"
+						strokeWidth="1.5"
+						strokeLinecap="round"
+					/>
+				</svg>
+			</button>
+
+			{isOpen && (
+				<div className={styles.dropdown}>
+					{options.map((option) => (
+						<button
+							key={option.value}
+							className={`${styles.option} ${
+								option.value === value ? styles.selected : ""
+							}`}
+							onClick={() => {
+								onChange(option.value);
+								setIsOpen(false);
+							}}
+							type="button"
+						>
+							{option.label}
+						</button>
+					))}
+				</div>
+			)}
+		</div>
+	);
+}

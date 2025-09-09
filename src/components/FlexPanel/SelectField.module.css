@@ -1,0 +1,244 @@
+.field {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	margin-bottom: 8px;
+	position: relative;
+}
+
+.label {
+	font-size: 9px;
+	font-weight: 600;
+	letter-spacing: 0.5px;
+	text-transform: uppercase;
+	transition: color 0.2s ease;
+}
+
+.field.dark .label {
+	color: rgba(255, 255, 255, 0.5);
+}
+
+.field.light .label {
+	color: rgba(0, 0, 0, 0.5);
+}
+
+.select {
+	width: 100%;
+	height: 28px;
+	padding: 0 10px;
+	border-radius: 6px;
+	font-size: 12px;
+	font-weight: 500;
+	cursor: pointer;
+	transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	font-family: inherit;
+	-webkit-font-smoothing: antialiased;
+	position: relative;
+	overflow: hidden;
+}
+
+.field.dark .select {
+	background: rgba(255, 255, 255, 0.03);
+	border: 1px solid rgba(255, 255, 255, 0.08);
+	color: rgba(255, 255, 255, 0.9);
+}
+
+.field.light .select {
+	background: rgba(255, 255, 255, 0.8);
+	border: 1px solid rgba(0, 0, 0, 0.1);
+	color: rgba(0, 0, 0, 0.9);
+}
+
+.select::after {
+	content: "";
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	height: 1px;
+	transform: translateX(-100%);
+	transition: transform 0.3s ease;
+}
+
+.field.dark .select::after {
+	background: linear-gradient(90deg, transparent, #7877c6, transparent);
+}
+
+.field.light .select::after {
+	background: linear-gradient(90deg, transparent, #5856a3, transparent);
+}
+
+.field.dark .select:hover {
+	background: rgba(255, 255, 255, 0.05);
+	border-color: rgba(255, 255, 255, 0.15);
+	transform: translateY(-1px);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.field.light .select:hover {
+	background: rgba(255, 255, 255, 0.95);
+	border-color: rgba(0, 0, 0, 0.15);
+	transform: translateY(-1px);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.select:hover::after {
+	transform: translateX(0);
+}
+
+.select:focus {
+	outline: none;
+}
+
+.field.dark .select.open {
+	background: rgba(255, 255, 255, 0.08);
+	border-color: #7877c6;
+	box-shadow: 0 0 0 1px #7877c6, 0 4px 20px rgba(120, 119, 198, 0.2);
+	transform: translateY(-1px);
+}
+
+.field.light .select.open {
+	background: rgba(255, 255, 255, 1);
+	border-color: #5856a3;
+	box-shadow: 0 0 0 1px #5856a3, 0 4px 20px rgba(88, 86, 163, 0.15);
+	transform: translateY(-1px);
+}
+
+.value {
+	flex: 1;
+	text-align: left;
+}
+
+.arrow {
+	transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), color 0.3s ease;
+}
+
+.field.dark .arrow {
+	color: rgba(255, 255, 255, 0.4);
+}
+
+.field.light .arrow {
+	color: rgba(0, 0, 0, 0.4);
+}
+
+.select.open .arrow {
+	transform: rotate(180deg);
+}
+
+.dropdown {
+	position: absolute;
+	top: calc(100% + 4px);
+	left: 0;
+	right: 0;
+	border-radius: 6px;
+	overflow: hidden;
+	z-index: 100;
+	animation: dropIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.field.dark .dropdown {
+	background: rgba(20, 20, 20, 0.95);
+	backdrop-filter: blur(20px);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5),
+		0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.field.light .dropdown {
+	background: rgba(255, 255, 255, 0.98);
+	backdrop-filter: blur(20px);
+	border: 1px solid rgba(0, 0, 0, 0.1);
+	box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.05);
+}
+
+@keyframes dropIn {
+	from {
+		opacity: 0;
+		transform: translateY(-8px) scale(0.98);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0) scale(1);
+	}
+}
+
+.option {
+	width: 100%;
+	padding: 8px 10px;
+	background: transparent;
+	border: none;
+	font-size: 12px;
+	font-weight: 500;
+	cursor: pointer;
+	transition: all 0.15s ease;
+	text-align: left;
+	font-family: inherit;
+	-webkit-font-smoothing: antialiased;
+	position: relative;
+}
+
+.field.dark .option {
+	color: rgba(255, 255, 255, 0.7);
+}
+
+.field.light .option {
+	color: rgba(0, 0, 0, 0.7);
+}
+
+.option::before {
+	content: "";
+	position: absolute;
+	left: 0;
+	top: 50%;
+	transform: translateY(-50%);
+	width: 2px;
+	height: 0;
+	transition: height 0.2s ease;
+}
+
+.field.dark .option::before {
+	background: linear-gradient(180deg, transparent, #7877c6, transparent);
+}
+
+.field.light .option::before {
+	background: linear-gradient(180deg, transparent, #5856a3, transparent);
+}
+
+.field.dark .option:hover {
+	background: rgba(255, 255, 255, 0.05);
+	color: rgba(255, 255, 255, 0.9);
+	padding-left: 14px;
+}
+
+.field.light .option:hover {
+	background: rgba(0, 0, 0, 0.03);
+	color: rgba(0, 0, 0, 0.9);
+	padding-left: 14px;
+}
+
+.option:hover::before {
+	height: 60%;
+}
+
+.field.dark .option.selected {
+	background: rgba(120, 119, 198, 0.15);
+	color: #7877c6;
+	font-weight: 600;
+}
+
+.field.light .option.selected {
+	background: rgba(88, 86, 163, 0.1);
+	color: #5856a3;
+	font-weight: 600;
+}
+
+.field.dark .option.selected:hover {
+	background: rgba(120, 119, 198, 0.2);
+}
+
+.field.light .option.selected:hover {
+	background: rgba(88, 86, 163, 0.15);
+}

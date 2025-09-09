@@ -1,0 +1,179 @@
+.section {
+	background: transparent;
+	margin-bottom: 0;
+	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.section.dark {
+	border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.section.light {
+	border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.section:last-child {
+	border-bottom: none;
+}
+
+.section.dark:hover {
+	background: rgba(255, 255, 255, 0.02);
+}
+
+.section.light:hover {
+	background: rgba(0, 0, 0, 0.02);
+}
+
+.sectionHeader {
+	width: 100%;
+	padding: 14px 16px 12px;
+	background: transparent;
+	border: none;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	cursor: pointer;
+	font-family: inherit;
+	transition: all 0.2s ease;
+	position: relative;
+	overflow: hidden;
+}
+
+.sectionHeader::before {
+	content: "";
+	position: absolute;
+	left: 0;
+	top: 50%;
+	transform: translateY(-50%);
+	width: 2px;
+	height: 0;
+	transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.section.dark .sectionHeader::before {
+	background: linear-gradient(180deg, transparent, #7877c6, transparent);
+}
+
+.section.light .sectionHeader::before {
+	background: linear-gradient(180deg, transparent, #5856a3, transparent);
+}
+
+.sectionHeader:hover::before {
+	height: 70%;
+}
+
+/* Add subtle pulse when section opens */
+.sectionHeader:active {
+	transform: scale(0.995);
+}
+
+.sectionTitle {
+	font-size: 10px;
+	font-weight: 500;
+	letter-spacing: 0.8px;
+	text-transform: uppercase;
+	transition: color 0.3s ease;
+}
+
+.section.dark .sectionTitle {
+	color: rgba(255, 255, 255, 0.9);
+}
+
+.section.light .sectionTitle {
+	color: rgba(0, 0, 0, 0.8);
+}
+
+.chevron {
+	transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.3s ease;
+}
+
+.section.dark .chevron {
+	color: rgba(255, 255, 255, 0.4);
+}
+
+.section.light .chevron {
+	color: rgba(0, 0, 0, 0.4);
+}
+
+.chevron.collapsed {
+	transform: rotate(-90deg);
+}
+
+.controls {
+	padding: 0 16px 16px;
+}
+
+@keyframes slideIn {
+	from {
+		opacity: 0;
+		transform: translateY(-8px) scale(0.98);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0) scale(1);
+	}
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+		transform: translateY(-6px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.row {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 8px;
+	margin-bottom: 8px;
+	animation: slideIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.row:nth-child(1) {
+	animation-delay: 0ms;
+}
+
+.row:nth-child(2) {
+	animation-delay: 40ms;
+}
+
+.row:nth-child(3) {
+	animation-delay: 80ms;
+}
+
+.row:last-child {
+	margin-bottom: 0;
+}
+
+/* For select fields that aren't in rows */
+.controls > div:not(.row) {
+	animation: fadeIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.controls > div:not(.row):nth-child(1) {
+	animation-delay: 0ms;
+}
+
+.controls > div:not(.row):nth-child(2) {
+	animation-delay: 30ms;
+}
+
+.controls > div:not(.row):nth-child(3) {
+	animation-delay: 60ms;
+}
+
+.controls > div:not(.row):nth-child(4) {
+	animation-delay: 90ms;
+}
+
+.controls > div:not(.row):nth-child(5) {
+	animation-delay: 120ms;
+}
+
+.controls > div:not(.row):nth-child(6) {
+	animation-delay: 150ms;
+}

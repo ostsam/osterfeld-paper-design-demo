@@ -1,0 +1,151 @@
+.field {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	position: relative;
+}
+
+.field.fullWidth {
+	grid-column: 1 / -1;
+}
+
+.labelRow {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	height: 12px;
+}
+
+.label {
+	font-size: 8px;
+	font-weight: 600;
+	letter-spacing: 0.4px;
+	text-transform: uppercase;
+	transition: color 0.2s ease;
+}
+
+.field.field.dark .label {
+	color: rgba(255, 255, 255, 0.5);
+}
+
+.field.field.light .label {
+	color: rgba(0, 0, 0, 0.5);
+}
+
+.hint {
+	font-size: 8px;
+	background: linear-gradient(90deg, #7877c6, #ff77a8);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+	font-weight: 600;
+	letter-spacing: 0.3px;
+	animation: shimmer 2s ease infinite;
+}
+
+@keyframes shimmer {
+	0%,
+	100% {
+		opacity: 0.7;
+	}
+	50% {
+		opacity: 1;
+	}
+}
+
+.inputWrapper {
+	position: relative;
+	display: flex;
+	align-items: center;
+	height: 28px;
+}
+
+.input {
+	width: 100%;
+	height: 100%;
+	padding: 0 10px;
+	border-radius: 6px;
+	font-size: 12px;
+	font-weight: 500;
+	transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+	font-variant-numeric: tabular-nums;
+	-webkit-font-smoothing: antialiased;
+	position: relative;
+}
+
+.field.dark .input {
+	background: rgba(255, 255, 255, 0.03);
+	border: 1px solid rgba(255, 255, 255, 0.08);
+	color: rgba(255, 255, 255, 0.9);
+}
+
+.field.light .input {
+	background: rgba(255, 255, 255, 0.8);
+	border: 1px solid rgba(0, 0, 0, 0.1);
+	color: rgba(0, 0, 0, 0.9);
+}
+
+.field.dark .input:hover {
+	background: rgba(255, 255, 255, 0.05);
+	border-color: rgba(255, 255, 255, 0.15);
+	transform: translateY(-1px);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.field.light .input:hover {
+	background: rgba(255, 255, 255, 0.95);
+	border-color: rgba(0, 0, 0, 0.15);
+	transform: translateY(-1px);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.field.dark .input:focus {
+	outline: none;
+	background: rgba(255, 255, 255, 0.08);
+	border-color: #7877c6;
+	box-shadow: 0 0 0 1px #7877c6, 0 4px 20px rgba(120, 119, 198, 0.2);
+	transform: translateY(-1px);
+}
+
+.field.light .input:focus {
+	outline: none;
+	background: rgba(255, 255, 255, 1);
+	border-color: #5856a3;
+	box-shadow: 0 0 0 1px #5856a3, 0 4px 20px rgba(88, 86, 163, 0.15);
+	transform: translateY(-1px);
+}
+
+.field.dark .field.focused .label {
+	color: #7877c6;
+}
+
+.field.light .field.focused .label {
+	color: #5856a3;
+}
+
+.suffix {
+	position: absolute;
+	right: 10px;
+	font-size: 10px;
+	pointer-events: none;
+	font-weight: 500;
+}
+
+.field.dark .suffix {
+	color: rgba(255, 255, 255, 0.3);
+}
+
+.field.light .suffix {
+	color: rgba(0, 0, 0, 0.4);
+}
+
+/* Remove default number input spinners */
+.input::-webkit-inner-spin-button,
+.input::-webkit-outer-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+
+.input[type="number"] {
+	-moz-appearance: textfield;
+}
