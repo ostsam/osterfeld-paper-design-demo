@@ -5,7 +5,7 @@ import styles from "./PreviewArea.module.css";
 import { useState } from "react";
 
 interface PreviewAreaProps {
-	theme: 'dark' | 'light';
+	theme: "dark" | "light";
 	layoutValues: LayoutValues;
 	flexValues: FlexValues;
 	onReset: () => void;
@@ -22,7 +22,7 @@ export function PreviewArea({
 
 	const items = Array.from({ length: itemCount }, (_, i) => i + 1);
 
-	const containerStyle = {
+	const containerStyle: React.CSSProperties = {
 		transform: `
       translate(${layoutValues.x}px, ${layoutValues.y}px) 
       rotate(${layoutValues.rotation}deg)
@@ -32,7 +32,7 @@ export function PreviewArea({
 		height: `${layoutValues.height}px`,
 		borderRadius: `${layoutValues.radius}px`,
 		display: "flex",
-		flexDirection: flexValues.direction as any,
+		flexDirection: flexValues.direction,
 		justifyContent:
 			flexValues.justifyContent === "start"
 				? "flex-start"
