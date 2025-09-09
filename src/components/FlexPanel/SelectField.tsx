@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import styles from "./SelectField.module.css";
+import { DropdownPortal } from "./DropdownPortal";
 
 interface Option {
 	value: string;
@@ -9,7 +10,7 @@ interface Option {
 }
 
 interface SelectFieldProps {
-	theme: 'dark' | 'light';
+	theme: "dark" | "light";
 	label: string;
 	value: string;
 	onChange: (value: string) => void;
@@ -24,8 +25,25 @@ export function SelectField({
 	options,
 }: SelectFieldProps) {
 	const [isOpen, setIsOpen] = useState(false);
+	const [dropdownPosition, setDropdownPosition] = useState({
+		top: 0,
+		left: 0,
+		width: 0,
+	});
 	const selectRef = useRef<HTMLDivElement>(null);
+	const buttonRef = useRef<HTMLButtonElement>(null);
 	const currentOption = options.find((opt) => opt.value === value);
+
+	useEffect(() => {
+		if (isOpen && buttonRef.current) {
+			const rect = buttonRef.current.getBoundingClientRect();
+			setDropdownPosition({
+				top: rect.bottom + 4,
+				left: rect.left,
+				width: rect.width,
+			});
+		}
+	}, [isOpen]);
 
 	useEffect(() => {
 		const handleClickOutside = (e: MouseEvent) => {
@@ -34,10 +52,26 @@ export function SelectField({
 			}
 		};
 
+		const handleScroll = () => {
+			if (isOpen && buttonRef.current) {
+				const rect = buttonRef.current.getBoundingClientRect();
+				setDropdownPosition({
+					top: rect.bottom + 4,
+					left: rect.left,
+					width: rect.width,
+				});
+			}
+		};
+
 		if (isOpen) {
 			document.addEventListener("mousedown", handleClickOutside);
-			return () =>
+			document.addEventListener("scroll", handleScroll, true);
+			window.addEventListener("resize", handleScroll);
+			return () => {
 				document.removeEventListener("mousedown", handleClickOutside);
+				document.removeEventListener("scroll", handleScroll, true);
+				window.removeEventListener("resize", handleScroll);
+			};
 		}
 	}, [isOpen]);
 
@@ -61,6 +95,7 @@ export function SelectField({
 		<div className={`${styles.field} ${styles[theme]}`} ref={selectRef}>
 			<label className={styles.label}>{label}</label>
 			<button
+				ref={buttonRef}
 				className={`${styles.select} ${isOpen ? styles.open : ""}`}
 				onClick={() => setIsOpen(!isOpen)}
 				onKeyDown={handleKeyDown}
@@ -79,23 +114,32 @@ export function SelectField({
 			</button>
 
 			{isOpen && (
-				<div className={styles.dropdown}>
-					{options.map((option) => (
-						<button
-							key={option.value}
-							className={`${styles.option} ${
-								option.value === value ? styles.selected : ""
-							}`}
-							onClick={() => {
-								onChange(option.value);
-								setIsOpen(false);
-							}}
-							type="button"
-						>
-							{option.label}
-						</button>
-					))}
-				</div>
+				<DropdownPortal>
+					<div
+						className={`${styles.dropdown} ${styles[theme]}`}
+						style={{
+							top: `${dropdownPosition.top}px`,
+							left: `${dropdownPosition.left}px`,
+							width: `${dropdownPosition.width}px`,
+						}}
+					>
+						{options.map((option) => (
+							<button
+								key={option.value}
+								className={`${styles.option} ${
+									option.value === value ? styles.selected : ""
+								}`}
+								onClick={() => {
+									onChange(option.value);
+									setIsOpen(false);
+								}}
+								type="button"
+							>
+								{option.label}
+							</button>
+						))}
+					</div>
+				</DropdownPortal>
 			)}
 		</div>
 	);
