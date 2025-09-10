@@ -58,57 +58,94 @@
 	display: flex;
 	align-items: center;
 	height: 28px;
-}
-
-.input {
-	width: 100%;
-	height: 100%;
-	padding: 0 10px;
 	border-radius: 6px;
-	font-size: 12px;
-	font-weight: 500;
+	overflow: hidden;
 	transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-	font-variant-numeric: tabular-nums;
-	-webkit-font-smoothing: antialiased;
-	position: relative;
 }
 
-.field.dark .input {
+.field.dark .inputWrapper {
 	background: rgba(255, 255, 255, 0.03);
 	border: 1px solid rgba(255, 255, 255, 0.08);
-	color: rgba(255, 255, 255, 0.9);
 }
 
-.field.light .input {
+.field.light .inputWrapper {
 	background: rgba(255, 255, 255, 0.8);
 	border: 1px solid rgba(0, 0, 0, 0.1);
-	color: rgba(0, 0, 0, 0.9);
 }
 
-.field.dark .input:hover {
+.inputWrapper::after {
+	content: "";
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	height: 1px;
+	transform: translateX(-100%);
+	transition: transform 0.3s ease;
+	z-index: 2;
+	pointer-events: none;
+}
+
+.field.dark .inputWrapper::after {
+	background: linear-gradient(90deg, transparent, #7877c6, transparent);
+}
+
+.field.light .inputWrapper::after {
+	background: linear-gradient(90deg, transparent, #5856a3, transparent);
+}
+
+.field.dark .inputWrapper:hover {
 	background: rgba(255, 255, 255, 0.05);
 	border-color: rgba(255, 255, 255, 0.15);
 	transform: translateY(-1px);
 	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.field.light .input:hover {
+.field.light .inputWrapper:hover {
 	background: rgba(255, 255, 255, 0.95);
 	border-color: rgba(0, 0, 0, 0.15);
 	transform: translateY(-1px);
 	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
-.field.dark .input:focus {
+.inputWrapper:hover::after {
+	transform: translateX(0);
+}
+
+.input {
+	width: 100%;
+	height: 100%;
+	padding: 0 10px;
+	border: none;
+	background: transparent;
+	font-size: 12px;
+	font-weight: 500;
+	transition: color 0.2s ease;
+	font-variant-numeric: tabular-nums;
+	-webkit-font-smoothing: antialiased;
+	position: relative;
+}
+
+.field.dark .input {
+	color: rgba(255, 255, 255, 0.9);
+}
+
+.field.light .input {
+	color: rgba(0, 0, 0, 0.9);
+}
+
+.input:focus {
 	outline: none;
+}
+
+.field.dark .inputWrapper:has(.input:focus) {
 	background: rgba(255, 255, 255, 0.08);
 	border-color: #7877c6;
 	box-shadow: 0 0 0 1px #7877c6, 0 4px 20px rgba(120, 119, 198, 0.2);
 	transform: translateY(-1px);
 }
 
-.field.light .input:focus {
-	outline: none;
+.field.light .inputWrapper:has(.input:focus) {
 	background: rgba(255, 255, 255, 1);
 	border-color: #5856a3;
 	box-shadow: 0 0 0 1px #5856a3, 0 4px 20px rgba(88, 86, 163, 0.15);
