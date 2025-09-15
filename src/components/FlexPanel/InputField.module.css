@@ -184,5 +184,50 @@
 }
 
 .input[type="number"] {
+	appearance: textfield;
 	-moz-appearance: textfield;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+	.inputWrapper {
+		height: 32px;
+	}
+	
+	.input {
+		font-size: 14px;
+		padding: 0 12px;
+	}
+	
+	.label {
+		font-size: 9px;
+	}
+	
+	.hint {
+		font-size: 9px;
+	}
+}
+
+@media (max-width: 480px) {
+	.inputWrapper {
+		height: 36px;
+	}
+	
+	.input {
+		font-size: 16px;
+		padding: 0 14px;
+	}
+	
+	.label {
+		font-size: 10px;
+	}
+	
+	.hint {
+		font-size: 10px;
+	}
+	
+	.suffix {
+		right: 14px;
+		font-size: 11px;
+	}
 }

@@ -166,3 +166,43 @@
 	animation: slideIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 	animation-delay: 200ms;
 }
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+	.sectionHeader {
+		padding: 16px 20px 14px;
+	}
+	
+	.sectionTitle {
+		font-size: 11px;
+	}
+	
+	.controls {
+		padding: 0 20px 20px;
+	}
+	
+	.row {
+		gap: 12px;
+		margin-bottom: 12px;
+	}
+}
+
+@media (max-width: 480px) {
+	.sectionHeader {
+		padding: 18px 16px 16px;
+	}
+	
+	.sectionTitle {
+		font-size: 10px;
+	}
+	
+	.controls {
+		padding: 0 16px 16px;
+	}
+	
+	.row {
+		grid-template-columns: 1fr;
+		gap: 8px;
+		margin-bottom: 8px;
+	}
+}

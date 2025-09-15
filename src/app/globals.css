@@ -85,3 +85,15 @@ textarea {
 *::after {
 	transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+/* Mobile-first responsive design improvements */
+@media (max-width: 480px) {
+	body {
+		font-size: 14px;
+	}
+	
+	/* Increase touch targets for mobile */
+	button, [role="button"], input, select, textarea {
+		min-height: 44px;
+	}
+}
