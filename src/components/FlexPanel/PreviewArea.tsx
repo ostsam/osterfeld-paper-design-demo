@@ -2,7 +2,7 @@
 
 import { LayoutValues, FlexValues } from "./FlexPanel";
 import styles from "./PreviewArea.module.css";
-import { useState } from "react";
+import { useState, useRef, useEffect, useLayoutEffect } from "react";
 
 interface PreviewAreaProps {
 	theme: "dark" | "light";
@@ -19,8 +19,107 @@ export function PreviewArea({
 }: PreviewAreaProps) {
 	const [itemCount, setItemCount] = useState(3);
 	const [zoom, setZoom] = useState(100);
+	const containerRef = useRef<HTMLDivElement>(null);
+	const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
+	const previousFlexValues = useRef<FlexValues>(flexValues);
 
 	const items = Array.from({ length: itemCount }, (_, i) => i + 1);
+
+	// FLIP animation for flex changes
+	useLayoutEffect(() => {
+		console.log('=== FLIP Effect Running ===');
+		console.log('Current flexValues:', flexValues);
+		console.log('Previous flexValues:', previousFlexValues.current);
+		
+		if (!containerRef.current) return;
+
+		const itemElements = itemRefs.current.filter(Boolean) as HTMLDivElement[];
+		
+		// Check if layout-affecting flex values changed
+		const layoutChanged = 
+			previousFlexValues.current.direction !== flexValues.direction ||
+			previousFlexValues.current.justifyContent !== flexValues.justifyContent ||
+			previousFlexValues.current.alignItems !== flexValues.alignItems ||
+			previousFlexValues.current.wrap !== flexValues.wrap;
+
+		console.log('Layout changed:', layoutChanged);
+
+		if (layoutChanged && itemElements.length > 0) {
+			// Get the pre-captured positions from before the state change
+			const capturedPositions = (window as typeof window & { __flipPositions?: { id: string; x: number; y: number }[] }).__flipPositions || [];
+			console.log('Captured positions:', capturedPositions);
+			
+			requestAnimationFrame(() => {
+				console.log('RAF callback - measuring after layout');
+				// Get current positions (after layout change)
+				const currentPositions = itemElements.map((el, index) => {
+					const rect = el.getBoundingClientRect();
+					const computedStyle = getComputedStyle(el.parentElement!);
+					console.log(`Item ${index} AFTER - Position: (${rect.left}, ${rect.top}), Parent flex-direction: ${computedStyle.flexDirection}, justify-content: ${computedStyle.justifyContent}`);
+					return { x: rect.left, y: rect.top };
+				});
+
+				// Apply FLIP animation
+				itemElements.forEach((el, index) => {
+					const flipId = `item-${index}`;
+					const capturedPos = capturedPositions.find(p => p.id === flipId);
+					const currentPos = currentPositions[index];
+
+					if (!capturedPos) {
+						console.log(`Item ${index}: No captured position found`);
+						return;
+					}
+
+					console.log(`Item ${index} BEFORE: (${capturedPos.x}, ${capturedPos.y})`);
+					console.log(`Item ${index} AFTER: (${currentPos.x}, ${currentPos.y})`);
+
+					const deltaX = capturedPos.x - currentPos.x;
+					const deltaY = capturedPos.y - currentPos.y;
+
+					console.log(`Item ${index}: Delta (${deltaX}, ${deltaY})`);
+
+					// Skip animation if positions didn't change significantly
+					if (Math.abs(deltaX) < 1 && Math.abs(deltaY) < 1) {
+						console.log(`Item ${index}: No significant movement, skipping`);
+						return;
+					}
+
+					console.log(`Item ${index}: Applying FLIP animation`);
+
+					// Disable transitions and apply inverse transform
+					el.style.transition = 'none';
+					el.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+
+					// Force reflow
+					void el.offsetHeight;
+
+					// Enable transitions and animate to final position
+					el.style.transition = 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+					el.style.transform = 'translate(0, 0)';
+
+					// Clear transform after animation
+					setTimeout(() => {
+						el.style.transition = '';
+						el.style.transform = '';
+					}, 400);
+				});
+
+				// Clear the captured positions
+				delete (window as typeof window & { __flipPositions?: { id: string; x: number; y: number }[] }).__flipPositions;
+			});
+		}
+
+		previousFlexValues.current = { ...flexValues };
+	}, [flexValues]);
+
+	// Clean up transforms when item count changes
+	useEffect(() => {
+		itemRefs.current = itemRefs.current.slice(0, itemCount);
+		// Add new refs if needed
+		while (itemRefs.current.length < itemCount) {
+			itemRefs.current.push(null);
+		}
+	}, [itemCount]);
 
 	const containerStyle: React.CSSProperties = {
 		transform: `
@@ -63,9 +162,14 @@ export function PreviewArea({
 					</div>
 
 					{/* Container with items */}
-					<div className={styles.container} style={containerStyle}>
-						{items.map((item) => (
-							<div key={item} className={styles.item}>
+					<div ref={containerRef} className={styles.container} style={containerStyle}>
+						{items.map((item, index) => (
+							<div 
+								key={item} 
+								ref={el => { itemRefs.current[index] = el; }}
+								data-flip-id={`item-${index}`}
+								className={styles.item}
+							>
 								{item}
 							</div>
 						))}

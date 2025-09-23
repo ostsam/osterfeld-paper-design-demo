@@ -62,6 +62,19 @@ export function FlexPanel() {
 
 	const handleFlexChange = useCallback(
 		<K extends keyof FlexValues>(key: K, value: FlexValues[K]) => {
+			// Capture positions before state change for FLIP animations
+			if (typeof window !== 'undefined') {
+				const items = document.querySelectorAll('[data-flip-id]');
+				const positions: { id: string; x: number; y: number }[] = [];
+				items.forEach(item => {
+					const rect = item.getBoundingClientRect();
+					const id = item.getAttribute('data-flip-id')!;
+					positions.push({ id, x: rect.left, y: rect.top });
+				});
+				// Store positions globally for the FLIP animation to use
+				(window as typeof window & { __flipPositions?: { id: string; x: number; y: number }[] }).__flipPositions = positions;
+			}
+			
 			setFlexValues((prev) => ({ ...prev, [key]: value }));
 		},
 		[]
