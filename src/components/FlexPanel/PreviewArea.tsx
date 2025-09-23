@@ -27,10 +27,6 @@ export function PreviewArea({
 
 	// FLIP animation for flex changes
 	useLayoutEffect(() => {
-		console.log('=== FLIP Effect Running ===');
-		console.log('Current flexValues:', flexValues);
-		console.log('Previous flexValues:', previousFlexValues.current);
-		
 		if (!containerRef.current) return;
 
 		const itemElements = itemRefs.current.filter(Boolean) as HTMLDivElement[];
@@ -42,20 +38,13 @@ export function PreviewArea({
 			previousFlexValues.current.alignItems !== flexValues.alignItems ||
 			previousFlexValues.current.wrap !== flexValues.wrap;
 
-		console.log('Layout changed:', layoutChanged);
-
 		if (layoutChanged && itemElements.length > 0) {
 			// Get the pre-captured positions from before the state change
-			const capturedPositions = (window as typeof window & { __flipPositions?: { id: string; x: number; y: number }[] }).__flipPositions || [];
-			console.log('Captured positions:', capturedPositions);
-			
+			const capturedPositions = (window as typeof window & { __flipPositions?: { id: string; x: number; y: number }[] }).__flipPositions || [];			
 			requestAnimationFrame(() => {
-				console.log('RAF callback - measuring after layout');
 				// Get current positions (after layout change)
-				const currentPositions = itemElements.map((el, index) => {
+				const currentPositions = itemElements.map((el) => {
 					const rect = el.getBoundingClientRect();
-					const computedStyle = getComputedStyle(el.parentElement!);
-					console.log(`Item ${index} AFTER - Position: (${rect.left}, ${rect.top}), Parent flex-direction: ${computedStyle.flexDirection}, justify-content: ${computedStyle.justifyContent}`);
 					return { x: rect.left, y: rect.top };
 				});
 
@@ -66,25 +55,11 @@ export function PreviewArea({
 					const currentPos = currentPositions[index];
 
 					if (!capturedPos) {
-						console.log(`Item ${index}: No captured position found`);
 						return;
 					}
-
-					console.log(`Item ${index} BEFORE: (${capturedPos.x}, ${capturedPos.y})`);
-					console.log(`Item ${index} AFTER: (${currentPos.x}, ${currentPos.y})`);
 
 					const deltaX = capturedPos.x - currentPos.x;
 					const deltaY = capturedPos.y - currentPos.y;
-
-					console.log(`Item ${index}: Delta (${deltaX}, ${deltaY})`);
-
-					// Skip animation if positions didn't change significantly
-					if (Math.abs(deltaX) < 1 && Math.abs(deltaY) < 1) {
-						console.log(`Item ${index}: No significant movement, skipping`);
-						return;
-					}
-
-					console.log(`Item ${index}: Applying FLIP animation`);
 
 					// Disable transitions and apply inverse transform
 					el.style.transition = 'none';
